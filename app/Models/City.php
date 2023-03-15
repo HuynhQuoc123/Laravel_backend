@@ -5,19 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Cart extends Model
+class City extends Model
 {
     use HasFactory;
-
     protected $fillable = [
-        'customer_id',
-        'product_id',
-        'quantity'
+        'name',
     ];
 
-    public function product()
+    public function district()
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->hasMany(District::class);
     }
-    
 }

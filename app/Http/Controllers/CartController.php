@@ -16,12 +16,14 @@ class CartController extends Controller
      */
     public function index($id)
     {
-        $getCartItems = Cart::with(['product'])->where('user_id', $id)->get();
+        $getCartItems = Cart::with(['product'])->where('customer_id', $id)->get();
+
         // return response()->json([
         //     'getCartItems' => $getCartItems,
           
         // ]);
         return response(CartResource::collection($getCartItems));
+
     }
 
     /**
@@ -34,7 +36,7 @@ class CartController extends Controller
     {
         
         $cart = Cart::firstOrCreate(
-            ['user_id' => $id, 'product_id' => $request->product_id],
+            ['customer_id' => $id, 'product_id' => $request->product_id],
             ['quantity' => 0]
         );
 
