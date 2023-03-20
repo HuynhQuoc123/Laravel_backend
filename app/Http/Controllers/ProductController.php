@@ -25,6 +25,8 @@ class ProductController extends Controller
         }])->orderBy('created_at', 'DESC')->get();
         return response()->json($product);
 
+  
+
 
         // return response(ProductResource::collection(Product::all()));
     }
@@ -109,7 +111,7 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         if($product->image != null) {
-            unlink(public_path()."/storage/uploads/products/". $product->image);
+            // unlink(public_path()."/storage/uploads/products/". $product->image);
         }
         $product->delete();
         return response()->json(['success'=>'true'], 200);

@@ -19,9 +19,18 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index(){
+        $orders = Order::with('orderDetails.product')
+        ->orderBy('created_at', 'DESC')
+        ->get();
+        // return response()->json($orders);
+        return response(OrderResource::collection($orders));
+
+
+    }
+    public function getOrderUser($userId)
     {
-        $orders = Order::where('id_customer', $id)
+        $orders = Order::where('id_customer', $userId)
         ->with('orderDetails.product')->orderBy('created_at', 'DESC')
         ->get();
 
@@ -37,10 +46,10 @@ class OrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($id, Request $request)
+    public function store($userId, Request $request)
     {
         $order = new Order;
-        $order->id_customer = $id;
+        $order->id_customer = $userId;
         $order->id_employee = $request['id_employee'];
         $order->id_contact = $request['id_contact'];
         $order->order_date = $request['order_date'];
@@ -57,9 +66,14 @@ class OrderController extends Controller
             $orderDetail->quantity = $value['quantity']; 
             $orderDetail->price = $value['productPrice']; 
             $orderDetail->save();
+
+            $product = Product::find($value['productId']);
+            $product->quantity =  ($product->quantity) - $value['quantity'];
+            $product->save();
+
         }
 
-        Cart::where('customer_id', $id)->delete();
+        Cart::where('customer_id', $userId)->delete();
 
         return response()->json(['success'=>'true'], 200);
 
@@ -71,9 +85,12 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($orderId)
     {
-        //
+        $order = Order::where( 'id',$orderId)->with('orderDetails.product')        ->get();
+        // return response()->json($order);
+        return response(OrderResource::collection($order));
+
     }
 
     /**
@@ -83,9 +100,14 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateStatus($orderId, Request $request)
     {
-        //
+        $order = Order::find($orderId);
+        $order->status = 1;
+        $order->id_employee = $request->input('id_employee');
+        $order->save();
+        return response()->json(['success'=>'true'], 200);
+
     }
 
     /**

@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Producer extends Model
+class SubImage extends Model
 {
     use HasFactory;
+    protected $table = 'images';
+
     protected $fillable = [
-     
-        'name',
-        'phone',
-        'email'
+        'product_id',
+        'image',
     ];
-     
+
     public function products()
     {
-        return $this->hasMany(Product::class, 'id_producer');
+        return $this->belongsTo(Product::class, 'product_id');
     }
 }

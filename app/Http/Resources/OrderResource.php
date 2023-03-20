@@ -17,21 +17,33 @@ class OrderResource extends JsonResource
         return [
             'id' => $this->id,
             'id_customer' => $this->id_customer,
-            'id_employee' => $this->id_employee,
-            'id_contact' => $this->id_contact,
             'payments' => $this->payments,
             'total' => $this->total,
             'status' => $this->status,
             'order_date' => $this->order_date,
+        
+            'name' => $this->contact->name,
+            'phone' => $this->contact->phone,
+            'address' => $this->contact->address,
+
+            'ward' => $this->contact->ward->name,
+            'district' => $this->contact->ward->district->name,
+            'city' => $this->contact->ward->district->city->name,
+
             'order_details' => $this->orderDetails->map(function ($orderDetail) {
                 return [
                     'quantity' => $orderDetail->quantity,
                     'price' => $orderDetail->price,
+                    'import_price' => $orderDetail->product->import_price,
                     'productName' => $orderDetail->product->name,
                     'productImage' => $orderDetail->product->image,
                     
                 ];
             }),
+            
+            'employee' => $this->employee,
+          
+
         ];
     }
 }

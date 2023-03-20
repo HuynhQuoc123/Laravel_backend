@@ -40,8 +40,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category = Category::find($id);
-        return response()->json($category);
+        $category = Category::with('products')->find($id);
+    return response()->json($category);
     }
 
     /**
@@ -70,4 +70,6 @@ class CategoryController extends Controller
         $category->delete();
         return response()->json(['success'=>'true'], 200);
     }
+
+
 }

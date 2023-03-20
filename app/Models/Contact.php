@@ -25,5 +25,10 @@ class Contact extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'id_contact');
+    }
 }
 

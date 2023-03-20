@@ -8,7 +8,10 @@ use Validator;
 use App\Models\Customer;
 class AuthController extends Controller
 {
-    //
+    public function index(){
+        $customer = Customer::all();
+        return response()->json($customer);
+    }
     public function register(Request $request){
 
        $validator = Validator::make($request->all(), [

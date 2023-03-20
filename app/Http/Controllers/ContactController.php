@@ -14,7 +14,7 @@ class ContactController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index($userId)
     {
 
         // $contacts = Contact::join('wards', 'contacts.ward_id', '=', 'wards.id')
@@ -26,8 +26,8 @@ class ContactController extends Controller
         // return response()->json($contacts);
 
         $contacts = Contact::with(['ward.district.city'])
-                ->whereHas('customer', function($query) use ($id) {
-                    $query->where('id', $id);
+                ->whereHas('customer', function($query) use ($userId) {
+                    $query->where('id', $userId);
                 })
                 ->get();
 
@@ -41,10 +41,10 @@ class ContactController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($id, Request $request)
+    public function store($userId, Request $request)
     {
         $contact = new Contact;
-        $contact->customer_id = $id;
+        $contact->customer_id = $userId;
         $contact->ward_id = $request->ward_id;
         $contact->address = $request->address;
         $contact->name = $request->name;

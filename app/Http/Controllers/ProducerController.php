@@ -42,7 +42,7 @@ class ProducerController extends Controller
      */
     public function show($id)
     {
-        $producer = Producer::find($id);
+        $producer = Producer::with('products')->find($id);
         return response()->json($producer);
     }
 

@@ -14,9 +14,9 @@ class CartController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index($userId)
     {
-        $getCartItems = Cart::with(['product'])->where('customer_id', $id)->get();
+        $getCartItems = Cart::with(['product'])->where('customer_id', $userId)->get();
 
         // return response()->json([
         //     'getCartItems' => $getCartItems,
@@ -32,11 +32,11 @@ class CartController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($id, Request $request)
+    public function store($userId, Request $request)
     {
         
         $cart = Cart::firstOrCreate(
-            ['customer_id' => $id, 'product_id' => $request->product_id],
+            ['customer_id' => $userId, 'product_id' => $request->product_id],
             ['quantity' => 0]
         );
 
@@ -75,9 +75,9 @@ class CartController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($cartId)
     {
-        $cart = Cart::find($id);
+        $cart = Cart::find($cartId);
         $cart->delete();
         return response()->json(['success'=>'true'], 200);
 
