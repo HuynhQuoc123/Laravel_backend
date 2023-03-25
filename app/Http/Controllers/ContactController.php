@@ -17,14 +17,6 @@ class ContactController extends Controller
     public function index($userId)
     {
 
-        // $contacts = Contact::join('wards', 'contacts.ward_id', '=', 'wards.id')
-        //     ->join('districts', 'wards.district_id', '=', 'districts.id')
-        //     ->join('cities', 'districts.city_id', '=', 'cities.id')
-        //     ->select('contacts.*', 'wards.name as ward_name', 'districts.name as district_name', 'cities.name as city_name')
-        //     ->where('customer_id', '=', $id)
-        //     ->get();
-        // return response()->json($contacts);
-
         $contacts = Contact::with(['ward.district.city'])
                 ->whereHas('customer', function($query) use ($userId) {
                     $query->where('id', $userId);
@@ -71,9 +63,12 @@ class ContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $contactId)
     {
-        //
+        $contact = Contact::find($contactId);
+        $contact->update($request->all());
+        return response()->json(['success' => 'true'], 200);
+
     }
 
     /**
@@ -82,8 +77,10 @@ class ContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($contactId)
     {
-        //
+        // $contact = Contact::find($contactId);
+        // $contact->delete();
+        // return response()->json(['success'=>'true'], 200);        
     }
 }

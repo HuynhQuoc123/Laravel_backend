@@ -70,7 +70,10 @@ Route::controller(AuthAdminController::class)->group(function(){
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('producers', ProducerController::class);
 Route::apiResource('products', ProductController::class);
+
+Route::get('/images/{productId}', [ImageController::class, 'index']);
 Route::apiResource('images', ImageController::class);
+
 
 
 
@@ -83,6 +86,8 @@ Route::delete('/cart/{cartId}', [CartController::class, 'destroy']);
 //contact
 Route::get('/contact/{userId}', [ContactController::class, 'index']);
 Route::post('/contact/{userId}', [ContactController::class, 'store']);
+Route::put('/contact/{contactId}', [ContactController::class, 'update']);
+
 
 //address
 Route::get('/cities', [AddressController::class, 'city']);

@@ -41,7 +41,7 @@ class CategoryController extends Controller
     public function show($id)
     {
         $category = Category::with('products')->find($id);
-    return response()->json($category);
+        return response()->json($category);
     }
 
     /**

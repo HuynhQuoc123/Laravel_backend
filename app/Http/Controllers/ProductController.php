@@ -9,6 +9,7 @@ use Image;
 use App\Http\Resources\ProductResource;
 
 
+
 class ProductController extends Controller
 {
     /**
@@ -18,17 +19,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::with(['category' => function($query) {
-            $query->select('id', 'name');
-        }, 'producer' => function($query) {
-            $query->select('id', 'name');
-        }])->orderBy('created_at', 'DESC')->get();
-        return response()->json($product);
-
-  
-
-
-        // return response(ProductResource::collection(Product::all()));
+        $products = Product::all();
+        return response(ProductResource::collection($products));
     }
 
     /**
@@ -53,6 +45,7 @@ class ProductController extends Controller
         $product->price = $request['price'];
         $product->quantity = $request['quantity'];
         $product->image = $imageName;
+        $product->describe = $request['describe'];
         $product->save();
         return response()->json(['success'=>'true'], 200);
         
@@ -66,8 +59,15 @@ class ProductController extends Controller
      */
     public function show($id)
     {
+        // $product = Product::with(['category' => function($query) {
+        //     $query->select('id', 'name');
+        // }, 'producer' => function($query) {
+        //     $query->select('id', 'name');
+        // }])->find($id);
         $product = Product::find($id);
-        return response()->json($product);
+        // return response()->json($product);
+
+        return response(new ProductResource($product));
     }
 
     /**
@@ -85,6 +85,7 @@ class ProductController extends Controller
         $product->import_price = $request->import_price;
         $product->price = $request->price;
         $product->quantity = $request->quantity;
+        $product->describe = $request->describe;
 
         if($product->image != $request->image){
             $image = $request->get('image');
