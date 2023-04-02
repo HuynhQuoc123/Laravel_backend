@@ -3,7 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AuthAdminController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\AdminController;
+
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProducerController;
@@ -16,14 +20,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\OrderController;
 
 
-
-
-
 use App\Http\Resources\UserResource;
-
-
-
-
 
 
 
@@ -47,6 +44,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware('auth:sanctum')->get('/admin', function (Request $request) {
+    // return new UserResource($request->user());
+    return response()->json(new UserResource($request->user()));
+
+});
 
 //login user
 Route::controller(AuthController::class)->group(function(){
@@ -56,13 +58,14 @@ Route::controller(AuthController::class)->group(function(){
 
 });
 
-//login admin
-Route::controller(AuthAdminController::class)->group(function(){
-    Route::post('loginAdmin', 'login');
-    Route::post('registerAdmin', 'register');
-    Route::get('allEmployee', 'index');
 
-});
+
+// Route::controller(AuthAdminController::class)->group(function(){
+//     Route::post('loginAdmin', 'login');
+//     Route::post('registerAdmin', 'register');
+//     Route::get('allEmployee', 'index');
+
+// });
 
 
 
@@ -101,6 +104,25 @@ Route::get('/order/order-{orderId}', [OrderController::class, 'show']); // chi t
 
 Route::post('/order/{userId}', [OrderController::class, 'store']); // taoj don hang
 Route::get('/order/{userId}', [OrderController::class, 'getOrderUser']);  // lay don hang cua user
+
+//login admin/ user - roles
+
+Route::post('loginAdmin', [EmployeeController::class, 'login']);
+Route::post('/users/{idUser}/roles', [EmployeeController::class, 'addRoleToUser']);
+Route::put('/users/{idUser}/roles', [EmployeeController::class, 'updateRoleToUser']);
+Route::apiResource('employees', EmployeeController::class);
+
+//Role - Permissions
+Route::post('/permissions', [PermissionController::class, 'store']);
+Route::apiResource('roles', RoleController::class);
+
+Route::post('/roles/{idRole}/permissions', [RoleController::class, 'addPermissionToRole']);
+Route::put('/roles/{idRole}/permissions', [RoleController::class, 'updateRolePermissions']);
+
+
+
+
+
 
 
 
